@@ -22,7 +22,7 @@ const forgotPasswordController = handler(async (req, res) => {
     const secret = process.env.SECRETKEY + passowed;
     const token = jwt.sign({ email }, secret);
 
-    const link = `http://localhost:3000/reset-password/${email}/${token}`;
+    const link = `http://192.168.1.17:3000/after-code/${email}/${token}`;
     const sentToemail = nodemailer.createTransport({
       service: "gmail",
       auth: {
