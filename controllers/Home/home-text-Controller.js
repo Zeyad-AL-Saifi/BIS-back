@@ -25,9 +25,9 @@ const getHomeTextController = handler(async (req, res) => {
 
 const updateHomeTextController = handler(async (req, res) => {
     const reqB = req.body;
- 
+   const newRes= reqB.main_text.replace('\'','`')
         await client.query(`UPDATE public.text_home_content
-        SET  "main_text"='${reqB.main_text}'
+        SET  "main_text"='${newRes}'
         WHERE "text_id" = '1'`,
             (error, result) => {
                 if (!error) {

@@ -76,12 +76,15 @@ const addNewNewsController = handler(async (req, res) => {
 
 const updateNewsController = handler(async (req, res) => {
     const reqB = req.body;
+    const filterContent = reqB.content.replace('\'', '`')
+    const filterTitle = reqB.title.replace('\'', '`')
+
     const { error } = validationHomeNews(req.body);
     if (error) {
         res.json({ message: error.details[0].message })
     } else {
         await client.query(`UPDATE public.news_home_content
-	SET  "title"='${reqB.title}',"content"='${reqB.content}'
+	SET  "title"='${filterTitle}',"content"='${filterContent}'
     WHERE "news_id"=${req.params.id} 
     `,
             (error, result) => {
