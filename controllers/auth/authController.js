@@ -64,9 +64,8 @@ const addNewStudentController = handler(async (req, res) => {
     const { error } = validationStudent(reqB);
     if (error) {
         res.status(400);
-        res.json({ message: error.details[0].message })
-        res.end()
-        client.end;
+        return res.json({ message: error.details[0].message })
+
     }
     //hash password
     const salt = await bcrypt.genSalt(10);
@@ -85,9 +84,14 @@ const addNewStudentController = handler(async (req, res) => {
 
 
     //get the user 
-    await client.query(`SELECT *
-	FROM public.students
-	where "email"='${reqB.email}'`,
+    await client.query(
+        `
+    SELECT email
+    FROM students WHERE email = '${req.body.email}'
+    UNION ALL
+    SELECT email
+    FROM teacher WHERE email = '${req.body.email}'`
+        ,
         (error, result) => {
             //delete image if exsit
             // if (result.student_image.publicId !== null) {
@@ -130,7 +134,7 @@ const addNewTeacherController = handler(async (req, res) => {
     const reqB = req.body;
     const { error } = validationTeacher(reqB);
     if (error) {
-        res.json({ message: error.details[0].message })
+        return res.json({ message: error.details[0].message })
     }
 
 
@@ -139,12 +143,17 @@ const addNewTeacherController = handler(async (req, res) => {
     req.body.password = await bcrypt.hash(req.body.password, salt);
 
     const o = {
-        data:"erwerwwr"
+        data: "erwerwwr"
     }
     //auth and signup
-    await client.query(`SELECT *
-	FROM public.teacher
-	where "email"='${reqB.email}'`,
+    await client.query(
+        `SELECT email
+    FROM students WHERE email = '${req.body.email}'
+    UNION ALL
+    SELECT email
+    FROM teacher WHERE email = '${req.body.email}'`
+
+        ,
         (error, result) => {
             if (error) {
                 res.json(error);
