@@ -27,8 +27,8 @@ const getAllTeachernoteController = handler(async (req, res) => {
 
 const getTeachernoteByIDController = handler(async (req, res) => {
     await client.query(
-        `SELECT * FROM public.teacher_notes
-        WHERE "teacher_notes_id"=${req.params.id}`
+        `SELECT * FROM public.teacher_notes 
+        WHERE "student_name_to" = '${req.params.name}'`
         ,
         (error, result) => {
             if (!error) {
@@ -48,66 +48,56 @@ const getTeachernoteByIDController = handler(async (req, res) => {
 
 
 const addNewTeachernoteController = handler(async (req, res) => {
-    const reqB = req.body; const { error } = validationNoteTeacher(reqB);
-    if (error) {
-        res.json({ message: error.details[0].message })
-    } else {
-        await client.query(`INSERT INTO public.teacher_notes(
-        "teacher_id_from", "teacher_name_from", "student_name_to", "note_status_code", "note")
+    const reqB = req.body;
+    await client.query(`INSERT INTO public.teacher_notes(
+        "teacher_id_from", "teacher_name_from", "student_name_to", "note_status_code", "note" ,"time")
         VALUES('${reqB.teacher_id_from}', '${reqB.teacher_name_from}', 
             '${reqB.student_name_to}', '${reqB.note_status_code}', 
-            '${reqB.note}')`,
-            (error, result) => {
-                if (!error) {
-                    res.status(201);
-                    res.json({ message: "add  teacher notes successfully" });
-                    res.end();
-                } else {
-                    res.status(400);
-                    res.send(error);
-                    res.end();
-                }
-                client.end;
+            '${reqB.note}', '${reqB.time}')`,
+        (error, result) => {
+            if (!error) {
+                res.status(201);
+                res.json({ message: "add  teacher notes successfully" });
+                res.end();
+            } else {
+                res.status(400);
+                res.send(error);
+                res.end();
             }
+            client.end;
+        }
 
-        )
-    }
+    )
+
 })
 
 
 const updateTeachernoteController = handler(async (req, res) => {
     const reqB = req.body;
-    const { error } = validationNoteTeacher(reqB);
-    if (error) {
-        res.json({ message: error.details[0].message })
-    } else {
-        await client.query(`UPDATE public.teacher_notes
-	SET  "teacher_id_from"='${reqB.teacher_id_from}',
-     "teacher_name_from"='${reqB.teacher_name_from}',
-      "student_name_to"='${reqB.student_name_to}', 
-    "note_status_code"='${reqB.note_status_code}',
-     "note"='${reqB.note}'
-	WHERE "teacher_notes_id" =${req.params.id};`,
-            (error, result) => {
-                if (!error) {
-                    res.status(201);
-                    res.json({ message: "update teacher notes successfully" });
-                    res.end();
-                } else {
-                    res.status(400);
-                    res.send(error);
-                    res.end();
-                }
-                client.end;
-            }
 
-        )
-    }
+    await client.query(`UPDATE public.teacher_notes
+	SET  note_status_code=1
+	WHERE note_id = ${req.params.id};`,
+        (error, result) => {
+            if (!error) {
+                res.status(201);
+                res.json({ message: "update teacher notes successfully" });
+                res.end();
+            } else {
+                res.status(400);
+                res.send(error);
+                res.end();
+            }
+            client.end;
+        }
+
+    )
+
 })
 
 const deleteTeachernoteController = handler(async (req, res) => {
     await client.query(`DELETE FROM public.teacher_notes
-	WHERE "teacher_notes_id"=${req.params.id}`,
+	WHERE "note_id"=${req.params.id}`,
         (error, result) => {
             if (!error) {
                 res.status(201);

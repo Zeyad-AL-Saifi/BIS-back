@@ -17,7 +17,7 @@ const getAllTeachernote = router.get('/', getAllTeachernoteController);
  * @method GET
  * @access public
  */
-const getTeachernoteById = router.get('/:id', getTeachernoteByIDController);
+const getTeachernoteById = router.get('/:name', getTeachernoteByIDController);
 
 
 /**

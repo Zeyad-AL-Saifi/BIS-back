@@ -78,10 +78,10 @@ const addNewStudentController = handler(async (req, res) => {
     //     return res.status(400).json({ message: "no file provided" })
     // };
     //get the path to the image
-    const imagePath = path.join(__dirname, `../../images/${req.file.filename}`);
+    // const imagePath = path.join(__dirname, `../../images/${req.file.filename}`);
 
-    //upload to cloudinary
-    const result = await cloudinaryUploadImage(imagePath);
+    // //upload to cloudinary
+    // const result = await cloudinaryUploadImage(imagePath);
 
 
     //get the user 
@@ -90,22 +90,22 @@ const addNewStudentController = handler(async (req, res) => {
 	where "email"='${reqB.email}'`,
         (error, result) => {
             //delete image if exsit
-            if (result.student_image.publicId !== null) {
-                cloudinaryRemoveImage(user.image.publicId)
-            }
-            const { secure_url, public_id } = result;
-            const data = JSON.stringify({ secure_url, public_id })
+            // if (result.student_image.publicId !== null) {
+            //     cloudinaryRemoveImage(user.image.publicId)
+            // }
+            // const { secure_url, public_id } = result;
+            // const data = JSON.stringify({ secure_url, public_id })
             if (error) {
                 res.json(error);
             } else if (result.rows.length > 0) {
                 res.json({ message: "This email exists" })
             } else {
                 client.query(`INSERT INTO public.students(
-                    "full_name", "address", "mobile_number", "gender", "data_of_birth", "class_number", "password", "student_image","email","is_admin")
+                    "full_name", "address", "mobile_number", "gender", "date_of_birth", "class_number", "password", "student_image","email")
                     VALUES('${reqB.full_name}', '${reqB.address}', 
                         '${reqB.mobile_number}', '${reqB.gender}', 
-                        '${reqB.data_of_birth}', '${reqB.class_number}',
-                         '${reqB.password}', '${data}','${reqB.email}','${reqB.is_admin}')`,
+                        '${reqB.date_of_birth}', '${reqB.class_number}',
+                         '${reqB.password}', '${reqB.student_image}','${reqB.email}')`,
                     (error, result) => {
                         if (!error) {
                             res.status(201);
@@ -123,7 +123,7 @@ const addNewStudentController = handler(async (req, res) => {
         }
     )
     //reomve image from system 
-    fs.unlinkSync(imagePath);
+    // fs.unlinkSync(imagePath);
 })
 
 const addNewTeacherController = handler(async (req, res) => {
@@ -138,6 +138,9 @@ const addNewTeacherController = handler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     req.body.password = await bcrypt.hash(req.body.password, salt);
 
+    const o = {
+        data:"erwerwwr"
+    }
     //auth and signup
     await client.query(`SELECT *
 	FROM public.teacher
@@ -149,7 +152,7 @@ const addNewTeacherController = handler(async (req, res) => {
                 res.json({ message: "This email exists" })
             } else {
                 client.query(`INSERT INTO public.teacher(
-                    "full_name", "address", "mobile_number","major", "gender","password", "teacher_image","email","is_admin")
+                    "full_name", "address", "mobile_number","major", "gender","password","teacher_image","email","is_admin")
                     VALUES('${reqB.full_name}', 
                            '${reqB.address}', 
                            '${reqB.mobile_number}',

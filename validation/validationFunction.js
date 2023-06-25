@@ -8,7 +8,7 @@ const Joi = require('joi');
 
 function validationHomeNews(object) {
     const schema = Joi.object({
-        title: Joi.string().min(1).max(15).trim().required(),
+        title: Joi.string().min(1).trim().required(),
         content: Joi.string().min(1).trim().required()
     })
     return schema.validate(object);
@@ -36,10 +36,11 @@ function validationHometext(object) {
 function validationNoteSt(object) {
     const schema = Joi.object({
         student_id_from: Joi.number().required(),
-        student_name_from: Joi.string().trim().required().min(8).max(25),
+        student_name_from: Joi.string().trim().required(),
         teacher_name_to: Joi.string().trim().min(2).max(25).required(),
         note_status_code: Joi.number().required(),
         note: Joi.string().trim().min(5).required(),
+        time: Joi.string().trim().required(),
 
     })
     return schema.validate(object);
@@ -54,12 +55,13 @@ function validationTeacher(object) {
     const schema = Joi.object({
         full_name: Joi.string().trim().required().min(8).max(25),
         address: Joi.string().trim().min(2).max(25).required(),
-        mobile_number: Joi.string().min(10).max(15).required(),
-        gender: Joi.string().trim().min(2).max(25).required(),
+        mobile_number: Joi.string().min(8).max(15).required(),
         major: Joi.string().trim().min(1).required(),
         password: Joi.string().trim().min(8).max(50).required(),
         email: Joi.string().trim().min(7).max(25).required(),
-        is_admin: Joi.boolean()
+        is_admin: Joi.boolean().required(),
+        gender:Joi.string().required(),
+        teacher_image:Joi.string()
 
     })
     return schema.validate(object);
@@ -76,6 +78,7 @@ function validationNoteTeacher(object) {
         student_name_to: Joi.string().trim().min(2).max(25).required(),
         note_status_code: Joi.number().required(),
         note: Joi.string().trim().min(5).required(),
+        time: Joi.string().required(),
 
     })
     return schema.validate(object);
@@ -98,14 +101,13 @@ function validationStudent(object) {
     const schema = Joi.object({
         full_name: Joi.string().trim().min(8).max(25).required(),
         address: Joi.string().trim().min(2).max(25).required(),
-        mobile_number: Joi.string().trim().min(10).max(15).required(),
-        gender: Joi.string().trim().min(2).max(25).required(),
-        data_of_birth: Joi.string().trim().min(8).max(10).required(),
+        mobile_number: Joi.string().trim().min(8).max(15).required(),
+        date_of_birth: Joi.string().trim().min(8).max(10).required(),
+        gender:Joi.string().required(),
         class_number: Joi.number().min(1).required(),
         password: Joi.string().trim().min(8).max(50).required(),
         email: Joi.string().trim().min(7).max(25).required(),
-        is_admin: Joi.boolean()
-
+        student_image:Joi.string()
 
     })
     return schema.validate(object);

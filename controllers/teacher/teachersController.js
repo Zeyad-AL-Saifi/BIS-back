@@ -48,15 +48,16 @@ const getTeacherByIDController = handler(async (req, res) => {
 
 const updateTeacherController = handler(async (req, res) => {
     const reqB = req.body;
-    const { error } = validationTeacher(reqB);
-    if (error) {
-        res.json({ message: error.details[0].message })
-    } else {
         await client.query(`UPDATE public.teacher
-	SET  "full_name"='${reqB.full_name}', "address"='${reqB.address}', "mobile_number"='${reqB.mobile_number}', 
-    "gender"='${reqB.gender}', "data_of_birth"='${reqB.data_of_birth}', "major"='${reqB.major}', 
-    "password"='${reqB.password}', "teacher_image"='${reqB.teacher_image},"email"='${reqB.email}',"is_admin"='${reqB.is_admin}'
-	WHERE "teacher_id" =${req.params.id};`,
+	    SET  "full_name"='${reqB.full_name}', 
+        "address"='${reqB.address}', 
+        "mobile_number"='${reqB.mobile_number}', 
+        "major"='${reqB.major}', 
+        "email"='${reqB.email}',
+        "is_admin"='${reqB.is_admin}', 
+        "teacher_image"='${reqB.teacher_image}'
+	     WHERE "teacher_id"=${req.params.id}
+         `,
             (error, result) => {
                 if (!error) {
                     res.status(201);
@@ -71,8 +72,9 @@ const updateTeacherController = handler(async (req, res) => {
             }
 
         )
-    }
-})
+    
+}
+)
 
 const deleteTeacherController = handler(async (req, res) => {
     await client.query(`DELETE FROM public.teacher

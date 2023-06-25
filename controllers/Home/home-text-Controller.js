@@ -25,11 +25,7 @@ const getHomeTextController = handler(async (req, res) => {
 
 const updateHomeTextController = handler(async (req, res) => {
     const reqB = req.body;
-    const { error } = validationHometext(req.body);
-    if (error) {
-        res.json({ message: error.details[0].message })
-
-    } else {
+ 
         await client.query(`UPDATE public.text_home_content
         SET  "main_text"='${reqB.main_text}'
         WHERE "text_id" = '1'`,
@@ -47,7 +43,7 @@ const updateHomeTextController = handler(async (req, res) => {
             }
 
         )
-    }
+    
 
 
 })

@@ -11,7 +11,7 @@ const photoUpload = require('../../middlewares/photoUpload');
  * @access protected
  */
 
-const addStudent = router.post('/', verifayTokenAndAdmin, photoUpload.single("image"), addNewStudentController);
+const addStudent = router.post('/', verifayTokenAndAdmin, addNewStudentController);
 
 
 

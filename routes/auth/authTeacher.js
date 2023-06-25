@@ -11,6 +11,8 @@ const photoUpload = require('../../middlewares/photoUpload');
  * @method POST
  * @access protected
  */
-const addTeachers = router.post('/', verifayTokenAndAdmin, photoUpload.single("image"), addNewTeacherController);
+
+// photoUpload.single("image"),
+const addTeachers = router.post('/', verifayTokenAndAdmin, addNewTeacherController);
 
 module.exports = router;

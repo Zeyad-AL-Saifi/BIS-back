@@ -35,7 +35,7 @@ const getTeacherById = router.get('/:id', getTeacherByIDController);
 /**
  * @DOCS update teachers
  * @router localhost:4500/teachers/id
- * @method PUT
+ * @method put
  * @access protected
  */
 const updateTeachers = router.put('/:id', verifayTokenAndAdmin, updateTeacherController)

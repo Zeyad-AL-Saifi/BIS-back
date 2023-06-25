@@ -48,30 +48,31 @@ const getStudentByIDController = handler(async (req, res) => {
 
 const updateStudentController = handler(async (req, res) => {
     const reqB = req.body;
-    const { error } = validationStudent(reqB);
-    if (error) {
-        res.json({ message: error.details[0].message })
-    } else {
-        await client.query(`UPDATE public.students
-	SET  "full_name"='${reqB.full_name}', "address"='${reqB.address}', "mobile_number"='${reqB.mobile_number}', 
-    "gender"='${reqB.gender}', "data_of_birth"='${reqB.data_of_birth}', "class_number"='${reqB.class_number}', 
-    "password"='${reqB.password}', "student_image"='${reqB.student_image},"email"='${reqB.email}',"is_admin"='${reqB.is_admin}''
-	WHERE "id_student" =${req.params.id};`,
-            (error, result) => {
-                if (!error) {
-                    res.status(201);
-                    res.json({ message: "update student successfully" });
-                    res.end();
-                } else {
-                    res.status(400);
-                    res.send(error);
-                    res.end();
-                }
-                client.end;
+    await client.query(`UPDATE public.students
+	SET "full_name"='${reqB.full_name}', 
+    "address"='${reqB.address}',
+    "mobile_number"='${reqB.mobile_number}', 
+    "date_of_birth"='${reqB.date_of_birth}',
+    "email"='${reqB.email}',
+    "class_number"='${reqB.class_number}',
+    "student_image"='${reqB.student_image}'
+	WHERE "id_student"=${req.params.id}
+    `,
+        (error, result) => {
+            if (!error) {
+                res.status(201);
+                res.json({ message: "update student successfully" });
+                res.end();
+            } else {
+                res.status(401);
+                res.send(error);
+                res.end();
             }
+            client.end;
+        }
 
-        )
-    }
+    )
+
 
 })
 
