@@ -31,8 +31,7 @@ function verifayTokenAndAuthorization(req, res, next) {
   const token = req.params.token;
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.SECRETKEY);
-      req.user = decoded;
+      // const decoded = jwt.verify(token, process.env.SECRETKEY);
       next();
     } catch (error) {
       res.status(401).json({ message: "invalid token" });
@@ -40,15 +39,7 @@ function verifayTokenAndAuthorization(req, res, next) {
   } else {
     res.status(401).json({ message: "no Token provided" });
   }
-  // if (req.user.email === req.params.email) {
-      
-  //     next();
-  //   } else {
-  //     return res
-  //       .status(403)
-  //       .send(decoded)
-  //       // .json({ message: "you are not allowed to do this ",user });
-  //   }
+ 
   
 }
 
