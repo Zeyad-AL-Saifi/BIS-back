@@ -31,6 +31,7 @@ const authStudent = require("./routes/auth/authStudent");
 const authTeacher = require("./routes/auth/authTeacher");
 const login = require("./routes/auth/login");
 const forgotPassword = require("./routes/password/forgot-password");
+const ResetPassword = require("./routes/password/reset-password");
 app.use("/students", studentsRouter);
 app.use("/teachers", teachersRouter);
 app.use("/home/text", HomeText);
@@ -42,6 +43,7 @@ app.use("/registration/teacher", authTeacher);
 app.use("/registration/student", authStudent);
 app.use("/login", login);
 app.use("/forgot-password", forgotPassword);
+app.use("/after-code", ResetPassword);
 
 
 //erro handler

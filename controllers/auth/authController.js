@@ -204,6 +204,4 @@ const addNewTeacherController = handler(async (req, res) => {
 
 })
 
-
-
 module.exports = { addNewStudentController, addNewTeacherController, loginStudentController, loginTeacherController }

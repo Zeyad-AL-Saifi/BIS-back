@@ -22,6 +22,7 @@ const forgotPasswordController = handler(async (req, res) => {
     const secret = process.env.SECRETKEY + passowed;
     const token = jwt.sign({ email }, secret);
 
+    //TODO:this link most be dynamic
     const link = `http://localhost:3000/after-code/${email}/${token}`;
     const sentToemail = nodemailer.createTransport({
       service: "gmail",
@@ -54,54 +55,6 @@ const forgotPasswordController = handler(async (req, res) => {
     //  res.json({ message: "Click on the link ", resetPasswordLink: link });
   }
 });
-
-
-
-
-
-
-
-
-// module.exports.getResetPasswordView = handler(async (req, res) => {
-//   const user = await Users.findById(req.params.userId);
-//   if (!user) {
-//     return res.status(404).send("users not found");
-//   }
-
-//   const secret = process.env.SECRETKEY + user.password;
-
-//   try {
-//     jwt.verify(req.params.token, secret);
-//     res.render("reset-password");
-//   } catch (error) {
-//     console.log(error);
-//     res.json({ message: "Error" });
-//   }
-// });
-
-// module.exports.restPasswordPage = handler(async (req, res) => {
-//   //TODO:validation
-//   const user = await Users.findById(req.params.userId);
-//   if (!user) {
-//     return res.status(404).send("users not found");
-//   }
-
-//   const secret = process.env.SECRETKEY + user.password;
-
-//   try {
-//     jwt.verify(req.params.token, secret);
-
-//     const salt = await bcrypt.genSalt(10);
-//     req.body.password = await bcrypt.hash(req.body.password, salt);
-//     user.password = req.body.password;
-
-//     await user.save();
-//     res.render("success-password");
-//   } catch (error) {
-//     console.log(error);
-//     res.json({ message: "Error" });
-//   }
-// });
 
 
 module.exports = { forgotPasswordController }

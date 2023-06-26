@@ -48,30 +48,51 @@ const getStudentByIDController = handler(async (req, res) => {
 
 const updateStudentController = handler(async (req, res) => {
     const reqB = req.body;
-    await client.query(`UPDATE public.students
-	SET "full_name"='${reqB.full_name}', 
-    "address"='${reqB.address}',
-    "mobile_number"='${reqB.mobile_number}', 
-    "date_of_birth"='${reqB.date_of_birth}',
-    "email"='${reqB.email}',
-    "class_number"='${reqB.class_number}',
-    "student_image"='${reqB.student_image}'
-	WHERE "id_student"=${req.params.id}
-    `,
+    await client.query(
+        `
+    SELECT email
+    FROM students WHERE email = '${req.body.email}'
+    UNION ALL
+    SELECT email
+    FROM teacher WHERE email = '${req.body.email}'`
+        ,
         (error, result) => {
-            if (!error) {
-                res.status(201);
-                res.json({ message: "update student successfully" });
-                res.end();
+            if (error) {
+                return res.json(error)
+            } else if (result.rowCount > 0) {
+                res.json({ message: "This email is being used by someone" })
             } else {
-                res.status(401);
-                res.send(error);
-                res.end();
-            }
-            client.end;
-        }
+                client.query(`UPDATE public.students
+                SET "full_name"='${reqB.full_name}', 
+                "address"='${reqB.address}',
+                "mobile_number"='${reqB.mobile_number}', 
+                "date_of_birth"='${reqB.date_of_birth}',
+                "email"='${reqB.email}',
+                "class_number"='${reqB.class_number}',
+                "student_image"='${reqB.student_image}'
+                WHERE "id_student"=${req.params.id}
+                `,
+                    (error, result) => {
+                        if (!error) {
+                            res.status(201);
+                            res.json({ message: "update student successfully" });
+                            res.end();
+                        } else {
+                            res.status(401);
+                            res.send(error);
+                            res.end();
+                        }
+                        client.end;
+                    }
 
-    )
+                )
+            }
+        })
+
+
+
+
+
 
 
 })

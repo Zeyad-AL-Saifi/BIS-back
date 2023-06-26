@@ -28,15 +28,28 @@ function verifyToken(req, res, next) {
 }
 
 function verifayTokenAndAuthorization(req, res, next) {
-  verifyToken(req, res, () => {
-    if (req.user.id === req.params.id || req.user.isAdmin) {
+  const token = req.params.token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.SECRETKEY);
+      req.user = decoded;
       next();
-    } else {
-      return res
-        .status(403)
-        .json({ message: "you are not allowed to do this " });
+    } catch (error) {
+      res.status(401).json({ message: "invalid token" });
     }
-  });
+  } else {
+    res.status(401).json({ message: "no Token provided" });
+  }
+  // if (req.user.email === req.params.email) {
+      
+  //     next();
+  //   } else {
+  //     return res
+  //       .status(403)
+  //       .send(decoded)
+  //       // .json({ message: "you are not allowed to do this ",user });
+  //   }
+  
 }
 
 function verifayTokenAndAdmin(req, res, next) {
