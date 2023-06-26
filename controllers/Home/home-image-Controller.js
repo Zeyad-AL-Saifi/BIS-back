@@ -60,13 +60,7 @@ const addNewHomeImagesController = handler(async (req, res) => {
     //upload to cloudinary
     const result = await cloudinaryUploadImage(imagePath);
 
-    //get the user from db
-    // const user =select
-
-    //delete image if exsit
-    // if (user.image_data.publicId !== null) {
-    //     await cloudinaryRemoveImage(user.image.publicId)
-    // }
+  
     const { secure_url, public_id } = result;
     const data = JSON.stringify({ secure_url, public_id })
     await client.query(`INSERT INTO public.image_home_content("image_name","image_data")
