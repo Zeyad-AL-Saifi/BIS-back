@@ -17,10 +17,9 @@ const forgotPasswordController = handler(async (req, res) => {
     return res.status(404).send("users not found");
   } else {
     const email = user.rows[0].email;
-    const passowed = user.rows[0].passowed
 
-    const secret = process.env.SECRETKEY + passowed;
-    const token = jwt.sign({ email }, secret);
+    const secret = process.env.SECRETKEY ;
+    const token = jwt.sign( {email} , secret);
 
     //TODO:this link most be dynamic
     const link = `http://localhost:3000/after-code/${email}/${token}`;

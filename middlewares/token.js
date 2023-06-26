@@ -29,18 +29,25 @@ function verifyToken(req, res, next) {
 
 function verifayTokenAndAuthorization(req, res, next) {
   const token = req.params.token;
+  const email = req.params.email;
+  const decoded = jwt.verify(token, process.env.SECRETKEY);
   if (token) {
     try {
-      // const decoded = jwt.verify(token, process.env.SECRETKEY);
-      next();
+      if (decoded.email === email) {
+        next();
+
+      } else {
+        res.status(401).json({ message: "you are not allowed do this" });
+
+      }
     } catch (error) {
       res.status(401).json({ message: "invalid token" });
     }
   } else {
     res.status(401).json({ message: "no Token provided" });
   }
- 
-  
+
+
 }
 
 function verifayTokenAndAdmin(req, res, next) {
