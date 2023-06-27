@@ -8,11 +8,9 @@ const getAllTeachersController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -29,11 +27,9 @@ const getTeacherByIDController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -54,9 +50,9 @@ const updateTeacherController = handler(async (req, res) => {
         ,
         (error, result) => {
             if (error) {
-                return res.json(error)
+                return res.status(400).json(error)
             } else if (result.rowCount > 0) {
-                res.json({ message: "This email is being used by someone" })
+                res.status(400).json({ message: "This email is being used by someone" })
             } else {
                 client.query(`UPDATE public.teacher
             SET  "full_name"='${reqB.full_name}', 
@@ -72,11 +68,9 @@ const updateTeacherController = handler(async (req, res) => {
                         if (!error) {
                             res.status(201);
                             res.json({ message: "update teacher successfully" });
-                            res.end();
                         } else {
                             res.status(400);
-                            res.send(error);
-                            res.end();
+                            res.send({ message: error });
                         }
                         client.end;
                     }
@@ -98,11 +92,9 @@ const deleteTeacherController = handler(async (req, res) => {
             if (!error) {
                 res.status(201);
                 res.json({ message: `delete teacher successfully` });
-                res.end();
             } else {
                 res.status(400);
-                res.send(error);
-                res.end();
+                res.send({ message: error });
             }
             client.end;
         }

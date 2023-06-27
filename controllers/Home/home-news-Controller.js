@@ -14,11 +14,9 @@ const getAllNewsController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -35,11 +33,9 @@ const getNewsByIDController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -51,7 +47,7 @@ const addNewNewsController = handler(async (req, res) => {
     const reqB = req.body;
     const { error } = validationHomeNews(req.body);
     if (error) {
-        res.json({ message: error.details[0].message })
+        return res.json({ message: error.details[0].message })
     } else {
         await client.query(`INSERT INTO public.news_home_content(
         "title", "content")
@@ -59,12 +55,10 @@ const addNewNewsController = handler(async (req, res) => {
             (error, result) => {
                 if (!error) {
                     res.status(201);
-                    res.json({ message: "add news successfully" });
-                    res.end();
+                    res.json({ message: "Add news successfully" });
                 } else {
                     res.status(400);
-                    res.send(error);
-                    res.end();
+                    res.send({ message: error });
                 }
                 client.end;
             }
@@ -81,7 +75,7 @@ const updateNewsController = handler(async (req, res) => {
 
     const { error } = validationHomeNews(req.body);
     if (error) {
-        res.json({ message: error.details[0].message })
+        return res.json({ message: error.details[0].message })
     } else {
         await client.query(`UPDATE public.news_home_content
 	SET  "title"='${filterTitle}',"content"='${filterContent}'
@@ -91,11 +85,11 @@ const updateNewsController = handler(async (req, res) => {
                 if (!error) {
                     res.status(201);
                     res.json({ message: "update news successfully" });
-                    res.end();
+
                 } else {
                     res.status(400);
-                    res.send(error);
-                    res.end();
+                    res.send({ message: error });
+
                 }
                 client.end;
             }
@@ -112,11 +106,11 @@ const deleteNewsController = handler(async (req, res) => {
             if (!error) {
                 res.status(201);
                 res.json({ message: `delete news successfully` });
-                res.end();
+
             } else {
                 res.status(400);
-                res.send(error);
-                res.end();
+                res.send({ message: error });
+
             }
             client.end;
         }

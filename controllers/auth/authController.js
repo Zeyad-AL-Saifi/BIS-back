@@ -4,7 +4,6 @@ const client = require('../../config/db')
 const bcrypt = require('bcryptjs')
 const { validationTeacher, validationStudent } = require('../../validation/validationFunction');
 const { genarateToken } = require("../../middlewares/token");
-const { cloudinaryUploadImage } = require("../../utils/cloudinery");
 
 const loginStudentController = handler(async (req, res) => {
 
@@ -25,10 +24,10 @@ const loginStudentController = handler(async (req, res) => {
         }
         else {
             res.status(400);
-            res.send({ error: "password not correct" });
+            res.send({ message: "password not correct" });
         }
 
-    } else (res.status(404).send({ error: "email not exists" }))
+    } else (res.status(404).send({ message: "email not exists" }))
 
 
 })
@@ -51,10 +50,10 @@ const loginTeacherController = handler(async (req, res) => {
         }
         else {
             res.status(400);
-            res.send({ error: "password not correct" })
+            res.send({ message: "password not correct" })
         }
 
-    } else (res.status(404).send({ error: "email not exists" }))
+    } else (res.status(404).send({ message: "email not exists" }))
 })
 
 
@@ -72,17 +71,6 @@ const addNewStudentController = handler(async (req, res) => {
     reqB.password = await bcrypt.hash(reqB.password, salt);
 
 
-    //valodation image 
-    // if (!req.file) {
-    //     return res.status(400).json({ message: "no file provided" })
-    // };
-    //get the path to the image
-    // const imagePath = path.join(__dirname, `../../images/${req.file.filename}`);
-
-    // //upload to cloudinary
-    // const result = await cloudinaryUploadImage(imagePath);
-
-
     //get the user 
     await client.query(
         `
@@ -93,16 +81,10 @@ const addNewStudentController = handler(async (req, res) => {
     FROM teacher WHERE email = '${req.body.email}'`
         ,
         (error, result) => {
-            //delete image if exsit
-            // if (result.student_image.publicId !== null) {
-            //     cloudinaryRemoveImage(user.image.publicId)
-            // }
-            // const { secure_url, public_id } = result;
-            // const data = JSON.stringify({ secure_url, public_id })
             if (error) {
-                res.json(error);
+                return res.status(400).json({ message: error });
             } else if (result.rows.length > 0) {
-                res.json({ message: "This email exists" })
+                return res.status(400).json({ message: "This email exists" })
             } else {
                 client.query(`INSERT INTO public.students(
                     "full_name", "address", "mobile_number", "gender", "date_of_birth", "class_number", "password", "student_image","email")
@@ -113,11 +95,11 @@ const addNewStudentController = handler(async (req, res) => {
                     (error, result) => {
                         if (!error) {
                             res.status(201);
-                            res.json({ message: "add new student successfully" });
+                            res.json({ message: "Add new student successfully" });
                         } else {
                             res.status(400);
-                            res.send(error);
-                            res.end();
+                            res.send({ message: error });
+
                         }
                         client.end;
                     }
@@ -126,8 +108,6 @@ const addNewStudentController = handler(async (req, res) => {
             }
         }
     )
-    //reomve image from system 
-    // fs.unlinkSync(imagePath);
 })
 
 const addNewTeacherController = handler(async (req, res) => {
@@ -142,9 +122,6 @@ const addNewTeacherController = handler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     req.body.password = await bcrypt.hash(req.body.password, salt);
 
-    const o = {
-        data: "erwerwwr"
-    }
     //auth and signup
     await client.query(
         `SELECT email
@@ -156,9 +133,9 @@ const addNewTeacherController = handler(async (req, res) => {
         ,
         (error, result) => {
             if (error) {
-                res.json(error);
+                return res.status(400).json({ message: error });
             } else if (result.rows.length > 0) {
-                res.json({ message: "This email exists" })
+                return res.status(400).json({ message: "This email exists" })
             } else {
                 client.query(`INSERT INTO public.teacher(
                     "full_name", "address", "mobile_number","major", "gender","password","teacher_image","email","is_admin")
@@ -175,12 +152,12 @@ const addNewTeacherController = handler(async (req, res) => {
                     (error, result) => {
                         if (!error) {
                             res.status(201);
-                            res.json({ message: "add new teacher successfully" });
-                            res.end();
+                            res.json({ message: "Add new teacher successfully" });
+
                         } else {
                             res.status(400);
-                            res.send(error);
-                            res.end();
+                            res.send({ message: error });
+
                         }
                         client.end;
                     }

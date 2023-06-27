@@ -9,7 +9,6 @@ const nodemailer = require("nodemailer");
 const updateTeacherPassword = handler(async (email, newPassword, res) => {
 
 
-    // const secret = process.env.SECRETKEY + newPassword;
     const salt = await bcrypt.genSalt(10);
     newPassword = await bcrypt.hash(newPassword, salt);
     const query = `UPDATE public.teacher 
@@ -19,9 +18,9 @@ const updateTeacherPassword = handler(async (email, newPassword, res) => {
 
     try {
         await client.query(query);
-        res.send({ massege: 'teacher password updated successfully.' });
+        return res.send({ message: 'teacher password updated successfully.' });
     } catch (error) {
-        res.send({ massege: 'Error updating teacher password:', error });
+        return res.send({ message: 'Error updating teacher password:', error });
     }
 });
 
@@ -37,9 +36,9 @@ const updateStudentPassword = handler(async (email, newPassword, res) => {
 
     try {
         await client.query(query);
-        res.send({ massege: 'Student password updated successfully.' });
+        return res.send({ message: 'Student password updated successfully.' });
     } catch (error) {
-        res.send({ massege: 'Error updating student password:', error });
+        return res.send({ message: 'Error updating student password:', error });
     }
 })
 
@@ -65,7 +64,7 @@ const updatePassword = handler(async (req, res) => {
         if (studentResult.rows.length > 0) {
             await updateStudentPassword(email, newPassword, res);
         } else {
-            res.send({ massege: 'Email not found in teacher and student tables.' });
+            return res.send({ message: 'Email not found in teacher and student tables.' });
         }
     }
 

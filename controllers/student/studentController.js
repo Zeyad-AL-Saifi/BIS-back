@@ -1,8 +1,5 @@
 const handler = require("express-async-handler");
 const client = require('../../config/db');
-const { validationStudent } = require('../../validation/validationFunction');
-
-
 
 const getAllStudentsController = handler(async (req, res) => {
     await client.query(
@@ -12,11 +9,9 @@ const getAllStudentsController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -33,11 +28,9 @@ const getStudentByIDController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -58,9 +51,9 @@ const updateStudentController = handler(async (req, res) => {
         ,
         (error, result) => {
             if (error) {
-                return res.json(error)
+                return res.status(400).json({ message: error })
             } else if (result.rowCount > 0) {
-                res.json({ message: "This email is being used by someone" })
+                return res.status(400).json({ message: "This email is being used by someone" })
             } else {
                 client.query(`UPDATE public.students
                 SET "full_name"='${reqB.full_name}', 
@@ -76,11 +69,9 @@ const updateStudentController = handler(async (req, res) => {
                         if (!error) {
                             res.status(201);
                             res.json({ message: "update student successfully" });
-                            res.end();
                         } else {
                             res.status(401);
-                            res.send(error);
-                            res.end();
+                            res.send({ message: error });
                         }
                         client.end;
                     }
@@ -104,11 +95,9 @@ const deleteStudentController = handler(async (req, res) => {
             if (!error) {
                 res.status(201);
                 res.json({ message: `delete student successfully` });
-                res.end();
             } else {
                 res.status(400);
-                res.send(error);
-                res.end();
+                res.send({ message: error });
             }
             client.end;
         }

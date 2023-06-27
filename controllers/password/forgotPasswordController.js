@@ -18,8 +18,8 @@ const forgotPasswordController = handler(async (req, res) => {
   } else {
     const email = user.rows[0].email;
 
-    const secret = process.env.SECRETKEY ;
-    const token = jwt.sign( {email} , secret);
+    const secret = process.env.SECRETKEY;
+    const token = jwt.sign({ email }, secret);
 
     //TODO:this link most be dynamic
     const link = `http://localhost:3000/after-code/${email}/${token}`;
@@ -41,12 +41,11 @@ const forgotPasswordController = handler(async (req, res) => {
     </h4>
     </div>`,
     };
+
     sentToemail.sendMail(options, function (error, success) {
       if (error) {
-        console.log(error);
-        res.status(500).json(error);
+        return res.status(500).json({ message: error });
       } else {
-        console.log("Email send " + success.response);
         res.render("link-send");
       }
     });

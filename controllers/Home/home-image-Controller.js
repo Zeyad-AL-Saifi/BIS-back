@@ -2,8 +2,7 @@ const handler = require("express-async-handler");
 const client = require('../../config/db')
 const fs = require('fs');
 const path = require("path");
-const { cloudinaryUploadImage, cloudinaryRemoveImage } = require("../../utils/cloudinery");
-const { json } = require("express");
+const { cloudinaryUploadImage } = require("../../utils/cloudinery");
 
 const getAllHomeImagesController = handler(async (req, res) => {
     await client.query(
@@ -13,11 +12,9 @@ const getAllHomeImagesController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -34,11 +31,9 @@ const getHomeImagesByIDController = handler(async (req, res) => {
             if (!error) {
                 res.status(200);
                 res.json(result.rows);
-                res.end();
             } else {
                 res.status(404);
-                res.json(error);
-                res.end();
+                res.json({ message: error });
             }
             client.end;
         }
@@ -60,7 +55,7 @@ const addNewHomeImagesController = handler(async (req, res) => {
     //upload to cloudinary
     const result = await cloudinaryUploadImage(imagePath);
 
-  
+
     const { secure_url, public_id } = result;
     const data = JSON.stringify({ secure_url, public_id })
     await client.query(`INSERT INTO public.image_home_content("image_name","image_data")
@@ -69,11 +64,9 @@ const addNewHomeImagesController = handler(async (req, res) => {
             if (!error) {
                 res.status(201);
                 res.json({ message: "add new home image successfully" });
-                res.end();
             } else {
                 res.status(400);
-                res.send(error);
-                res.end();
+                res.send({ message: error });
             }
             client.end;
         }
@@ -95,11 +88,9 @@ const deleteHomeImagesController = handler(async (req, res) => {
             if (!error) {
                 res.status(201);
                 res.json({ message: `delete image successfully` });
-                res.end();
             } else {
                 res.status(400);
-                res.send(error);
-                res.end();
+                res.send({ message: error });
             }
             client.end;
         }
