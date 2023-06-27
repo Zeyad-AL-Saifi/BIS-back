@@ -41,44 +41,29 @@ const getStudentByIDController = handler(async (req, res) => {
 
 const updateStudentController = handler(async (req, res) => {
     const reqB = req.body;
-    await client.query(
-        `
-    SELECT email
-    FROM students WHERE email = '${req.body.email}'
-    UNION ALL
-    SELECT email
-    FROM teacher WHERE email = '${req.body.email}'`
-        ,
-        (error, result) => {
-            if (error) {
-                return res.status(400).json({ message: error })
-            } else if (result.rowCount > 0) {
-                return res.status(400).json({ message: "This email is being used by someone" })
-            } else {
-                client.query(`UPDATE public.students
+    await client.query(`UPDATE public.students
                 SET "full_name"='${reqB.full_name}', 
                 "address"='${reqB.address}',
                 "mobile_number"='${reqB.mobile_number}', 
                 "date_of_birth"='${reqB.date_of_birth}',
                 "email"='${reqB.email}',
-                "class_number"='${reqB.class_number}',
-                "student_image"='${reqB.student_image}'
+                "class_number"='${reqB.class_number}'
                 WHERE "id_student"=${req.params.id}
                 `,
-                    (error, result) => {
-                        if (!error) {
-                            res.status(201);
-                            res.json({ message: "update student successfully" });
-                        } else {
-                            res.status(401);
-                            res.send({ message: error });
-                        }
-                        client.end;
-                    }
-
-                )
+        (error, result) => {
+            if (!error) {
+                res.status(201);
+                res.json({ message: "update student successfully" });
+            } else {
+                res.status(401);
+                res.send({ message: error });
             }
-        })
+            client.end;
+        }
+
+    )
+
+
 
 
 

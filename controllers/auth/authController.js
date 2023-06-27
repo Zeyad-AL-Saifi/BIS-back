@@ -11,6 +11,9 @@ const loginStudentController = handler(async (req, res) => {
     const user = await client.query(`SELECT *
 	FROM public.students
 	where "email"='${req.body.email}'`)
+
+
+
     if (user.rowCount != 0) {
         const isPasswordMatch = await bcrypt.compare(
             req.body.password,
@@ -27,7 +30,7 @@ const loginStudentController = handler(async (req, res) => {
             res.send({ message: "password not correct" });
         }
 
-    } else (res.status(404).send({ message: "email not exists" }))
+    } else { res.status(400).json({ message:"email not exist" }) }
 
 
 })
